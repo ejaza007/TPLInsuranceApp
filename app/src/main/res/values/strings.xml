@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TPL</string>
+    <string name="mobileNumber">Please Enter Your Mobile Number</string>
+    <string name="label">Mobile Number</string>
+</resources>
