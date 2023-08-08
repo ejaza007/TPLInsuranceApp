@@ -1,11 +1,13 @@
 package com.example.tpl
 
+
 import android.os.Bundle
 import android.text.Layout.Alignment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -41,7 +43,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
@@ -51,7 +57,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.tpl.ui.theme.TPLTheme
+
 
 
 class MainActivity : ComponentActivity() {
@@ -59,11 +70,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TPLTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    Homescreen()
+                val navi = rememberNavController()
+                NavHost(navController = navi, startDestination = "splashscreen") {
+                    composable("splashscreen") {
+                        SplashContent(navController = navi)
+                    }
+                    composable("mainActivity") {
+                        Homescreen(navController = navi)
+                    }
+                    composable("onboarding"){
+                        OnboardScreen()
+                    }
                 }
             }
         }
@@ -71,20 +88,30 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Homescreen(modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        TPLCard(modifier = Modifier.weight(1f)) // Use weight to let the card take the required height
-        Spacer(modifier = Modifier.height(10.dp)) // Add some spacing between the card and button
+fun Homescreen(modifier: Modifier = Modifier, navController: NavController) {
+    //val navi = rememberNavController()
+    val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(continueButtonColor)
+    ){
+
+                // Draw the orange backdrop with rounded corners (1/3rd of the screen)
+    TPLCard(modifier = Modifier.weight(1f)) // Use weight to let the card take the required height
+        //Spacer(modifier = Modifier.height(10.dp)) // Add some spacing between the card and button
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 ,
             horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
         ) {
-            ContinueButton()
+            ContinueButton(navController = navController)
         }
     }
 }
+
 
 
 
@@ -95,10 +122,16 @@ fun TPLCard(modifier: Modifier = Modifier) {
 
     Card(
         modifier = modifier
-            .padding(start = 45.dp, end = 45.dp, top = 50.dp, bottom = 250.dp) // Adjust the horizontal padding as needed
+            .padding(
+                start = 45.dp,
+                end = 45.dp,
+                top = 50.dp,
+                bottom = 250.dp
+            ) // Adjust the horizontal padding as needed
             .clip(RoundedCornerShape(16.dp))
             .fillMaxWidth()// Adjust the corner radius as needed
             .height(0.dp),
+
 
         elevation = CardDefaults.cardElevation(defaultElevation = 30.dp)
     ) {
@@ -138,11 +171,13 @@ fun TPLCard(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun ContinueButton() {
+fun ContinueButton(navController: NavController) {
     val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
 
     Button(
-        onClick = { /* TODO */ },
+        onClick = {
+            navController.navigate("onboarding")
+        },
         modifier = Modifier
             .padding(16.dp)
             .size(width = 200.dp, height = 50.dp) // Set the desired size of the button
@@ -180,6 +215,20 @@ fun EditNumberField(
     )
 }
 
+//@Composable
+//fun OrangeBackdrop(modifier: Modifier = Modifier) {
+  //  val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
+    ////Box(
+        //modifier = modifier
+          //  .fillMaxSize() // Use weight to let the backdrop take one-third of the screen height) // Adjust horizontal padding as needed
+            //.clip(RoundedCornerShape(16.dp))
+            //.background(continueButtonColor) // Replace with your desired orange color
+    //) {
+ //Homescreen()
+   // }
+//}
+
+
 
 
 @Preview
@@ -189,9 +238,11 @@ fun HomescreenPreview(){
         Surface(
             modifier = Modifier.fillMaxSize(),
         ){
-        Homescreen()
+        //Homescreen(navController = navi)
     }}
 }
+
+
 
 
 

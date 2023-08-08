@@ -4,5 +4,7 @@
     <color name="orangeLight">#FFA051</color>
     <color name="red">#C53301</color>
     <color name="orangeThree">#EC600D</color>
+        <color name="backdrop_color">#FF4081</color> <!-- Replace #FF4081 with your desired color code -->
+
 
 </resources>
