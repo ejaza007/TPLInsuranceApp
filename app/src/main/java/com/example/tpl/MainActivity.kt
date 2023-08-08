@@ -2,7 +2,6 @@ package com.example.tpl
 
 
 import android.os.Bundle
-import android.text.Layout.Alignment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -12,25 +11,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -41,16 +34,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -62,7 +50,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tpl.ui.theme.TPLTheme
-
 
 
 class MainActivity : ComponentActivity() {
@@ -86,30 +73,77 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+@Composable
+fun boxshape(modifier: Modifier){
+
+    val whiteClr = Color(android.graphics.Color.parseColor("#FFFFFF"))
+    
+    Box(
+        modifier = Modifier
+    ) {
+
+        // Draw the orange backdrop with rounded corners (1/3rd of the screen)
+        orangeShape(shape = RoundedCornerShape(10))
+
+
+
+    }
+}
 
 @Composable
 fun Homescreen(modifier: Modifier = Modifier, navController: NavController) {
-    //val navi = rememberNavController()
-    val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
 
     Column(
+        modifier = modifier.fillMaxWidth().padding(bottom = 150.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        boxshape(modifier = modifier.padding(bottom = 100.dp))
+        Spacer(Modifier.height(155.dp))
+
+
+
+
+
+        ContinueButton(
+            modifier = modifier.padding(
+                start = 100.dp, end = 100.dp,top = 50.dp
+            ), navController = navController
+        )
+
+
+    }
+}
+
+
+
+
+@Composable
+fun orangeShape(shape: Shape){
+    val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
+    Box(
         modifier = Modifier
-            .fillMaxSize()
+            .size(400.dp)
+            .width(100.dp)
+            .height(100.dp)
+            .clip(shape)
             .background(continueButtonColor)
     ){
-
-                // Draw the orange backdrop with rounded corners (1/3rd of the screen)
-    TPLCard(modifier = Modifier.weight(1f)) // Use weight to let the card take the required height
-        //Spacer(modifier = Modifier.height(10.dp)) // Add some spacing between the card and button
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                ,
-            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-        ) {
-            ContinueButton(navController = navController)
-        }
+        TPLCard()
     }
+//    Column(modifier = Modifier
+//        .fillMaxWidth()
+//        .wrapContentSize(androidx.compose.ui.Alignment.Center)) {
+//        Box(
+//            modifier = Modifier
+//                .size(400.dp)
+//                .width(100.dp)
+//                .height(100.dp)
+//                .clip(shape)
+//                .background(continueButtonColor)
+//        ){
+//            TPLCard()
+//        }
+//    }
 }
 
 
@@ -123,14 +157,14 @@ fun TPLCard(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(
-                start = 45.dp,
-                end = 45.dp,
-                top = 50.dp,
-                bottom = 250.dp
+                start = 20.dp,
+                end = 20.dp,
+                top = 40.dp,
+                bottom = 22.dp
             ) // Adjust the horizontal padding as needed
             .clip(RoundedCornerShape(16.dp))
             .fillMaxWidth()// Adjust the corner radius as needed
-            .height(0.dp),
+            .height(IntrinsicSize.Min),
 
 
         elevation = CardDefaults.cardElevation(defaultElevation = 30.dp)
@@ -171,7 +205,7 @@ fun TPLCard(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun ContinueButton(navController: NavController) {
+fun ContinueButton(modifier: Modifier, navController: NavController) {
     val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
 
     Button(
@@ -213,6 +247,24 @@ fun EditNumberField(
         label = { Text(stringResource(label)) },
         keyboardOptions = keyboardOptions
     )
+}
+
+@Composable
+fun OrangeBox(shape: Shape){
+    val continueButtonColor = Color(android.graphics.Color.parseColor("#EC600D"))
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentSize(androidx.compose.ui.Alignment.Center)) {
+        Box(
+            modifier = Modifier
+                .size(500.dp)
+                .clip(shape)
+                //.background(continueButtonColor)//,
+            //TPLCard()
+        ){
+            TPLCard()
+        }
+    }
 }
 
 //@Composable
